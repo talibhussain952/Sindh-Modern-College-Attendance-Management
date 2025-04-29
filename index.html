@@ -34,7 +34,7 @@
     <h2 class="text-xl font-semibold mb-2">Enroll Student/Teacher</h2>
     <form id="enrollForm" class="grid grid-cols-2 gap-2">
       <input type="text" id="name" placeholder="Name" class="p-2 border rounded" required>
-      <input type="text" id="id" placeholder="Roll No / Teacher ID" class="p-2 border rounded" required>
+      <input type="text" id="id" placeholder="Roll No / Staff ID" class="p-2 border rounded" required>
       <select id="role" class="p-2 border rounded">
         <option value="student">Student</option>
         <option value="teacher">Teacher</option>
@@ -42,7 +42,7 @@
       <select id="class" class="p-2 border rounded">
         <option>GBSN Batch-1</option>
         <option>GBSN Batch-2</option>
-        <option>Teacher</option>
+        <option>Staff</option>
       </select>
       <button type="submit" class="col-span-2 bg-blue-600 text-white py-2 rounded">Enroll</button>
     </form>
@@ -56,7 +56,7 @@
       <select id="attClass" class="w-full p-2 border rounded mb-4">
         <option>GBSN Batch-1</option>
         <option>GBSN Batch-2</option>
-        <option>Teacher</option>
+        <option>Staff</option>
       </select>
       <div id="attList" class="space-y-2"></div>
       <button type="submit" class="w-full bg-green-600 text-white py-2 rounded mt-4">Save Attendance</button>
@@ -69,7 +69,7 @@
     <select id="viewClass" class="w-full p-2 border rounded mb-2">
       <option>GBSN Batch-1</option>
       <option>GBSN Batch-2</option>
-      <option>Teacher</option>
+      <option>Staff</option>
     </select>
     <input type="month" id="viewMonth" class="w-full p-2 border rounded mb-2" placeholder="mm/yyyy">
     <button id="viewBtn" class="w-full bg-blue-500 text-white py-2 rounded mb-2">View Record</button>
@@ -189,7 +189,7 @@
   <form id="editForm" class="grid grid-cols-2 gap-2 mb-4">
     <input type="hidden" id="editIndex">
     <input type="text" id="editName" placeholder="Name" class="p-2 border rounded" required>
-    <input type="text" id="editId" placeholder="Roll No / Teacher ID" class="p-2 border rounded" required>
+    <input type="text" id="editId" placeholder="Roll No / Staff ID" class="p-2 border rounded" required>
     <select id="editRole" class="p-2 border rounded">
       <option value="student">Student</option>
       <option value="teacher">Teacher</option>
@@ -197,7 +197,7 @@
     <select id="editClass" class="p-2 border rounded">
       <option>GBSN Batch-1</option>
       <option>GBSN Batch-2</option>
-      <option>Teacher</option>
+      <option>Staff</option>
     </select>
     <button type="submit" class="col-span-2 bg-blue-600 text-white py-2 rounded">Save Changes</button>
   </form>
@@ -256,10 +256,8 @@
   renderInfoUsers();
 </script>
 
+<div class="text-center italic font-bold mt-10">DEVELOPED BY TALIB HUSSAIN DAHAR</div>
 </body>
 </html>
-
-
-
 
 
