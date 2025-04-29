@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>College Attendance System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+
+  <!-- Header with logo -->
+  <div class="text-center mb-4">
+    <img src="https://i.postimg.cc/BjzrCMRw/logo.png" alt="College Logo" class="mx-auto w-24">
+    <h1 class="text-2xl font-bold">College Attendance Management</h1>
+  </div>
+
+  <!-- Enrollment Section -->
+  <div class="bg-white rounded shadow p-4 mb-6 max-w-xl mx-auto">
+    <h2 class="text-xl font-semibold mb-2">Enroll Student/Teacher</h2>
+    <form id="enrollForm" class="grid grid-cols-2 gap-2">
+      <input type="text" id="name" placeholder="Name" class="p-2 border rounded" required>
+      <input type="text" id="id" placeholder="Roll No / Teacher ID" class="p-2 border rounded" required>
+      <select id="role" class="p-2 border rounded">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
+      <select id="class" class="p-2 border rounded">
+        <option>GBSN Batch-1</option>
+        <option>GBSN Batch-2</option>
+        <option>Teacher</option>
+      </select>
+      <button type="submit" class="col-span-2 bg-blue-600 text-white py-2 rounded">Enroll</button>
+    </form>
+  </div>
+
+  <!-- Attendance Section -->
+  <div class="bg-white rounded shadow p-4 mb-6 max-w-xl mx-auto">
+    <h2 class="text-xl font-semibold mb-2">Mark Attendance</h2>
+    <form id="attendanceForm">
+      <input type="date" id="attDate" class="w-full p-2 border rounded mb-2" required>
+      <select id="attClass" class="w-full p-2 border rounded mb-4">
+        <option>GBSN Batch-1</option>
+        <option>GBSN Batch-2</option>
+        <option>Teacher</option>
+      </select>
+      <div id="attList" class="space-y-2"></div>
+      <button type="submit" class="bg-green-600 text-white w-full py-2 rounded mt-4">Save Attendance</button>
+    </form>
+  </div>
+
+  <!-- View Attendance Section -->
+  <div class="bg-white rounded shadow p-4 mb-6 max-w-xl mx-auto">
+    <h2 class="text-xl font-semibold mb-2">View Attendance Record</h2>
+    <select id="viewClass" class="w-full p-2 border rounded mb-2">
+      <option>GBSN Batch-1</option>
+      <option>GBSN Batch-2</option>
+      <option>Teacher</option>
+    </select>
+    <input type="month" id="viewMonth" class="w-full p-2 border rounded mb-2">
+    <button id="viewBtn" class="w-full bg-blue-500 text-white py-2 rounded mb-2">View Record</button>
+    <div id="viewData" class="text-sm max-h-60 overflow-y-auto border p-2 rounded bg-gray-50"></div>
+  </div>
+
+  <script>
+    const enrollForm = document.getElementById('enrollForm');
+    const attendanceForm = document.getElementById('attendanceForm');
+    const attClass = document.getElementById('attClass');
+    const attList = document.getElementById('attList');
+    const viewBtn = document.getElementById('viewBtn');
+
+    function getData(key) {
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+
+    function setData(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    enrollForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const id = document.getElementById('id').value;
+      const role = document.getElementById('role').value;
+      const batch = document.getElementById('class').value;
+      const users = getData('users');
+      users.push({ name, id, role, batch });
+      setData('users', users);
+      alert(`${role} enrolled successfully`);
+      enrollForm.reset();
+    });
+
+    attClass.addEventListener('change', renderAttendanceList);
+    document.getElementById('attDate').addEventListener('change', renderAttendanceList);
+
+    function renderAttendanceList() {
+      const users = getData('users');
+      const selectedClass = attClass.value;
+      const list = users.filter(u => u.batch === selectedClass);
+      attList.innerHTML = list.map(u => `
+        <div class="flex justify-between items-center border p-2 rounded">
+          <span>${u.name} (${u.id})</span>
+          <div>
+            <label><input type="radio" name="att_${u.id}" value="Present" checked> P </label>
+            <label><input type="radio" name="att_${u.id}" value="Absent"> A </label>
+            <label><input type="radio" name="att_${u.id}" value="Leave"> L </label>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    attendanceForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const date = document.getElementById('attDate').value;
+      const month = date.slice(0, 7);
+      const batch = attClass.value;
+      const attendance = [];
+      const users = getData('users').filter(u => u.batch === batch);
+      users.forEach(u => {
+        const status = document.querySelector(`input[name="att_${u.id}"]:checked`).value;
+        attendance.push({ id: u.id, name: u.name, status });
+      });
+      const data = getData('attendance');
+      data.push({ date, month, batch, attendance });
+      setData('attendance', data);
+      alert('Attendance Saved!');
+    });
+
+    viewBtn.addEventListener('click', () => {
+      const month = document.getElementById('viewMonth').value;
+      const batch = document.getElementById('viewClass').value;
+      const records = getData('attendance').filter(r => r.month === month && r.batch === batch);
+      const viewBox = document.getElementById('viewData');
+      viewBox.innerHTML = records.map(r => `
+        <div class="mb-2">
+          <strong>${r.date} (${r.batch})</strong><br>
+          ${r.attendance.map(a => `${a.name}: ${a.status}`).join('<br>')}
+        </div>
+      `).join('');
+    });
+  </script>
+
+</body>
+</html>
